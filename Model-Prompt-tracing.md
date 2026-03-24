@@ -371,4 +371,5 @@ For **google/gemma-3-27b-it** model rewrite to / will give error so comment it. 
 
 
 Now call the model as it is, and check in pheonix:
-![alt text](image-13.png)
+<img width="1905" height="1080" alt="image" src="https://github.com/user-attachments/assets/f7b33a58-079b-4530-95c3-cd7fa6df2694" />
+
