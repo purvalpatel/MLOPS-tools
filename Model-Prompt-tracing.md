@@ -65,11 +65,10 @@ from opentelemetry.sdk.resources import Resource
 # OpenInference
 from openinference.semconv.trace import (
     SpanAttributes,
-    OpenInferenceMimeTypeValues,
 )
 
 # ---------------------------------------------------
-# Configure Tracing (Phoenix)
+# Phoenix setup
 # ---------------------------------------------------
 resource = Resource(attributes={
     "openinference.project.name": "vllm-observability"
@@ -82,48 +81,30 @@ otlp_exporter = OTLPSpanExporter(
     insecure=True,
     headers={"x-phoenix-project-name": "vllm-observability"}
 )
-span_processor = BatchSpanProcessor(otlp_exporter)
-trace.get_tracer_provider().add_span_processor(span_processor)
+
+trace.get_tracer_provider().add_span_processor(
+    BatchSpanProcessor(otlp_exporter)
+)
+
 tracer = trace.get_tracer(__name__)
 
-PATH_ROUTES: dict[str, str] = {
-    "gemma3-27b": os.getenv("GEMMA3_URL",   "http://gemma3-27b-service:8000"),
-    "kimi":       os.getenv("KIMI_URL",      "http://kimi-service:8000"),
-    "llama":      os.getenv("LLAMA_URL",     "http://llama-service:8000"),
-    "nucurate":   os.getenv("NUCURATE_URL",  "http://nucurate-model-service:8000"),
-    "qwen3-5":    os.getenv("QWEN_URL",      "http://qwen3-5-svc:8000"),
-    "vllm-qwen":  os.getenv("VLLM_QWEN_URL", "http://vllm-qwen3-5-svc:8000"),
+# ---------------------------------------------------
+# Model routing
+# ---------------------------------------------------
+PATH_ROUTES = {
+    "gemma3-27b": os.getenv("GEMMA3_URL", "http://gemma3-27b-service:8000"),
+    "kimi": os.getenv("KIMI_URL", "http://kimi-service:8000"),
+    "llama": os.getenv("LLAMA_URL", "http://llama-service:8000"),
+    "nucurate": os.getenv("NUCURATE_URL", "http://nucurate-model-service:8000"),
+    "qwen3.5-27b": os.getenv("QWEN_URL", "http://qwen3-5-svc:8000"),
 }
 
 DEFAULT_VLLM_URL = os.getenv("DEFAULT_VLLM_URL", "http://llama-service:8000")
 
-print("Loaded path routes:")
-for prefix, url in PATH_ROUTES.items():
-    print(f"  /{prefix}/*  →  {url}")
-print(f"  (default)   →  {DEFAULT_VLLM_URL}")
-
-
-def resolve_by_model(model_name: str) -> str:
-    """
-    Fallback resolution when client calls /v1/chat/completions directly.
-    Matches the model name string against PATH_ROUTES keys (substring).
-    e.g. "google/gemma-3-27b-it"  →  contains "gemma"  →  gemma3-27b-service
-    """
-    if not model_name:
-        return DEFAULT_VLLM_URL
-    lower = model_name.lower()
-    for key, url in PATH_ROUTES.items():
-        # normalise key: "gemma3-27b" → "gemma" also matches
-        if key.lower() in lower or lower in key.lower():
-            return url
-    print(f"[WARN] No route matched for model='{model_name}', falling back to default.")
-    return DEFAULT_VLLM_URL
-
-
 # ---------------------------------------------------
-# FastAPI App
+# FastAPI
 # ---------------------------------------------------
-app = FastAPI(title="Multi-Model vLLM Proxy")
+app = FastAPI(title="Multi-Model Proxy")
 
 
 @app.get("/healthz")
@@ -131,153 +112,158 @@ async def health():
     return {"status": "ok"}
 
 
-@app.get("/routes")
-async def list_routes():
-    """Returns the active routing table — useful for debugging."""
-    return {"path_routes": PATH_ROUTES, "default": DEFAULT_VLLM_URL}
+# ---------------------------------------------------
+# Safe JSON parsing
+# ---------------------------------------------------
+async def safe_json(request: Request):
+    try:
+        return await request.json()
+    except Exception:
+        raw = await request.body()
+        print("❌ INVALID JSON:", raw.decode())
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
 
 # ---------------------------------------------------
-# Core tracing + forwarding logic (shared)
+# Model resolver
 # ---------------------------------------------------
-async def _forward(
-    data: dict,
-    backend_url: str,
-    route_label: str,
-):
-    """
-    Instruments an OpenInference LLM span and forwards the request to
-    the resolved backend service.
-    """
+def resolve_by_model(model_name: str):
+    if not model_name:
+        return DEFAULT_VLLM_URL
+
+    lower = model_name.lower()
+    for key, url in PATH_ROUTES.items():
+        if key in lower:
+            return url
+
+    return DEFAULT_VLLM_URL
+
+
+# ---------------------------------------------------
+# Token estimation fallback
+# ---------------------------------------------------
+def estimate_tokens(prompt, response):
+    pt = max(1, len(prompt) // 4)
+    ct = max(1, len(response) // 4)
+    return pt, ct, pt + ct
+
+
+# ---------------------------------------------------
+# Core forward logic
+# ---------------------------------------------------
+async def _forward(data, backend_url, route_label, endpoint="/v1/chat/completions"):
+
     messages = data.get("messages", [])
-    model_name = data.get("model", "unknown")
-    full_url = f"{backend_url.rstrip('/')}/v1/chat/completions"
+    model_name = data.get("model", route_label)
 
-    print(f"[PROXY] model={model_name!r}  route={route_label!r}  →  {full_url}")
+    full_url = f"{backend_url.rstrip('/')}{endpoint}"
+
+    print(f"[PROXY] route={route_label} → {full_url}")
+
+    # Convert payload for completion models
+    if endpoint == "/v1/completions":
+        prompt = data.get("prompt")
+        if not prompt and messages:
+            prompt = messages[0].get("content", "")
+        data = {"model": model_name, "prompt": prompt}
 
     with tracer.start_as_current_span(f"vllm-{route_label}-call", kind=SpanKind.CLIENT) as span:
 
-        # ── OpenInference metadata ──────────────────────────────
+        # Mark LLM span
         span.set_attribute(SpanAttributes.OPENINFERENCE_SPAN_KIND, "LLM")
-        span.set_attribute(SpanAttributes.LLM_MODEL_NAME, model_name)
-        span.set_attribute("llm.backend_url", backend_url)
-        span.set_attribute("llm.route_label", route_label)
 
-        # ── Input ───────────────────────────────────────────────
-        span.set_attribute(SpanAttributes.INPUT_MIME_TYPE, OpenInferenceMimeTypeValues.JSON.value)
-        span.set_attribute(SpanAttributes.INPUT_VALUE, json.dumps(messages))
+        # ---------------- INPUT ----------------
+        span.set_attribute(
+            SpanAttributes.INPUT_VALUE,
+            json.dumps(messages)
+        )
 
         for i, msg in enumerate(messages):
-            role = msg.get("role", "user")
-            content = msg.get("content", "")
-            # Multimodal content arrives as a list — serialise for the span
-            if isinstance(content, list):
-                content = json.dumps(content)
-            span.set_attribute(f"llm.input_messages.{i}.message.role", role)
-            span.set_attribute(f"llm.input_messages.{i}.message.content", content)
+            span.set_attribute(f"llm.input_messages.{i}.message.role", msg.get("role", "user"))
+            span.set_attribute(f"llm.input_messages.{i}.message.content", str(msg.get("content", "")))
 
-        # ── Call backend ────────────────────────────────────────
         start = time.time()
+
         try:
-            response = requests.post(
-                full_url,
-                json=data,
-                timeout=120,
-                headers={"Content-Type": "application/json"},
-            )
+            response = requests.post(full_url, json=data, timeout=120)
             latency = time.time() - start
             response.raise_for_status()
             output = response.json()
 
-        except requests.exceptions.Timeout:
-            latency = time.time() - start
-            _record_error(span, latency, "timeout")
-            raise HTTPException(status_code=504, detail=f"Backend timeout: {full_url}")
-
-        except requests.exceptions.ConnectionError as e:
-            latency = time.time() - start
-            _record_error(span, latency, str(e))
-            raise HTTPException(status_code=502, detail=f"Cannot connect to {full_url}: {e}")
-
-        except requests.exceptions.HTTPError as e:
-            latency = time.time() - start
-            _record_error(span, latency, str(e))
-            raise HTTPException(
-                status_code=response.status_code,
-                detail=f"Backend returned error: {e}",
-            )
-
         except Exception as e:
             latency = time.time() - start
-            _record_error(span, latency, str(e))
+            span.set_attribute("error", True)
+            span.set_attribute("error.message", str(e))
+            span.set_attribute("llm.latency", latency)
             raise HTTPException(status_code=500, detail=str(e))
 
-        # ── Output ──────────────────────────────────────────────
+        # ---------------- OUTPUT ----------------
+        span.set_attribute(
+            SpanAttributes.OUTPUT_VALUE,
+            json.dumps(output)[:2000]
+        )
+
+        response_text = ""
+
         for i, choice in enumerate(output.get("choices", [])):
-            msg_out = choice.get("message", {})
-            span.set_attribute(f"llm.output_messages.{i}.message.role",    msg_out.get("role", "assistant"))
-            span.set_attribute(f"llm.output_messages.{i}.message.content", msg_out.get("content", ""))
+            msg = choice.get("message", {})
+            text = msg.get("content", "")
+            response_text = text
 
-        span.set_attribute(SpanAttributes.OUTPUT_VALUE, json.dumps(output))
-        span.set_attribute(SpanAttributes.OUTPUT_MIME_TYPE, OpenInferenceMimeTypeValues.JSON.value)
-        span.set_attribute("llm.latency", latency)
+            span.set_attribute(f"llm.output_messages.{i}.message.role", msg.get("role", "assistant"))
+            span.set_attribute(f"llm.output_messages.{i}.message.content", text)
 
-        # ── Token usage ─────────────────────────────────────────
-        usage = output.get("usage", {})
+        # ---------------- TOKENS ----------------
+        usage = output.get("usage")
+
         if usage:
-            span.set_attribute("llm.token_count.prompt",     usage.get("prompt_tokens", 0))
-            span.set_attribute("llm.token_count.completion", usage.get("completion_tokens", 0))
-            span.set_attribute("llm.token_count.total",      usage.get("total_tokens", 0))
+            pt = usage.get("prompt_tokens", 0)
+            ct = usage.get("completion_tokens", 0)
+            tt = usage.get("total_tokens", 0)
+        else:
+            prompt_text = " ".join([str(m.get("content", "")) for m in messages])
+            pt, ct, tt = estimate_tokens(prompt_text, response_text)
+
+        span.set_attribute(SpanAttributes.LLM_TOKEN_COUNT_PROMPT, pt)
+        span.set_attribute(SpanAttributes.LLM_TOKEN_COUNT_COMPLETION, ct)
+        span.set_attribute(SpanAttributes.LLM_TOKEN_COUNT_TOTAL, tt)
+
+        span.set_attribute("llm.latency", latency)
 
     return output
 
 
-def _record_error(span, latency: float, message: str):
-    span.set_attribute("error", True)
-    span.set_attribute("error.message", message)
-    span.set_attribute("llm.latency", latency)
-
-
 # ---------------------------------------------------
-# Route A — Path-prefixed (recommended)
-#
-#   POST /{service}/v1/chat/completions
-#
-#   Examples:
-#     /gemma3-27b/v1/chat/completions  →  gemma3-27b-service:8000
-#     /kimi/v1/chat/completions        →  kimi-service:8000
-#     /llama/v1/chat/completions       →  llama-service:8000
+# Path routing
 # ---------------------------------------------------
 @app.post("/{service}/v1/chat/completions")
 async def proxy_by_path(service: str, request: Request):
     backend_url = PATH_ROUTES.get(service)
-    if backend_url is None:
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                f"Unknown service prefix '/{service}'. "
-                f"Valid prefixes: {list(PATH_ROUTES.keys())}"
-            ),
-        )
-    data = await request.json()
-    return await _forward(data, backend_url=backend_url, route_label=service)
+    if not backend_url:
+        raise HTTPException(status_code=404, detail=f"Unknown service {service}")
+
+    data = await safe_json(request)
+    return await _forward(data, backend_url, service)
 
 
 # ---------------------------------------------------
-# Route B — Direct / model-name fallback
-#
-#   POST /v1/chat/completions
-#
-#   Routes by the "model" field in the request body.
-#   Useful for clients that don't support path prefixes
-#   (e.g. LiteLLM, OpenAI SDK with base_url set here).
+# Chat fallback
 # ---------------------------------------------------
 @app.post("/v1/chat/completions")
-async def proxy_by_model(request: Request):
-    data = await request.json()
-    model_name = data.get("model", "")
-    backend_url = resolve_by_model(model_name)
-    return await _forward(data, backend_url=backend_url, route_label=model_name or "default")
+async def proxy_chat(request: Request):
+    data = await safe_json(request)
+    backend = resolve_by_model(data.get("model", ""))
+    return await _forward(data, backend, data.get("model", "default"))
+
+
+# ---------------------------------------------------
+# Completion endpoint (nucurate)
+# ---------------------------------------------------
+@app.post("/v1/completions")
+async def proxy_completion(request: Request):
+    data = await safe_json(request)
+    backend = resolve_by_model(data.get("model", ""))
+    return await _forward(data, backend, data.get("model", "default"), endpoint="/v1/completions")
 ```
 
 Dockerfile:
