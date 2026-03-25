@@ -460,6 +460,89 @@ kubectl apply -f evidently_deployment_job.yaml
 - Note : If Values are same in all records then it will not show in graph sometimes.
 - it will check all the records and if changes in every record then it will show data drift.
 
+
+### Ways to View reports:
+1. Download in local and open in browser.
+2. View in Evidently UI.
+3. View in HTTP (if you have setup nginx or any web server to serve these html files).
+4. Grafana
+
+#### 1. Download in local and open in browser:
+![alt text](image-15.png)
+
+
+#### 2. View in Evidently UI
+Deployment for Evidently-ui : `evidently-ui-deployment.yaml`
+```YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: evidently-ui
+  namespace: vllm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: evidently-ui
+  template:
+    metadata:
+      labels:
+        app: evidently-ui
+    spec:
+      containers:
+      - name: evidently-ui
+        image: docker.merai.app/devops/evidently:0.2
+        command:
+          - evidently
+          - ui
+          - --workspace
+          - /data/evidently_workspace
+          - --host
+          - 0.0.0.0
+          - --port
+          - "8000"
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: logs
+          mountPath: /data
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: hf-cache-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: evidently-ui-service
+  namespace: vllm
+spec:
+  type: NodePort
+  selector:
+    app: evidently-ui
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30090
+```
+Apply:
+```
+kubectl apply -f evidently-ui-deployment.yaml
+## check deployment and service
+kubectl get deployments -n vllm
+```
+#### How to check in browser:
+Open - [http://10.10.110.53:30090]
+
+```
+Select model -> Reports -> View Report.
+```
+<img width="1917" height="1035" alt="image" src="https://github.com/user-attachments/assets/9bd96f70-1675-40d9-b283-9d4d12049b4e" />
+
+
+- Note : If Values are same in all records then it will not show in graph sometimes.
+- it will check all the records and if changes in every record then it will show data drift.
+- 
 ### Open the HTML file in browser:
 <img width="1900" height="949" alt="image" src="https://github.com/user-attachments/assets/7b889612-f1ff-43a3-8cdb-204e58d9e139" />
 <br>
