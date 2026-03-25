@@ -579,7 +579,9 @@ Select model -> Reports -> View Report.
 ### Open the HTML file in browser:
 <img width="1900" height="949" alt="image" src="https://github.com/user-attachments/assets/7b889612-f1ff-43a3-8cdb-204e58d9e139" />
 <br>
+
 ## Final Architecture:
+
 ```
                 ┌──────────────────────────┐
                 │   LLM Proxy (FastAPI)    │
