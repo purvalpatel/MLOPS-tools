@@ -462,4 +462,8 @@ kubectl apply -f evidently_deployment_job.yaml
 
 ### Open the HTML file in browser:
 <img width="1900" height="949" alt="image" src="https://github.com/user-attachments/assets/7b889612-f1ff-43a3-8cdb-204e58d9e139" />
+<br>
+Final Architecture: <br>
+<img width="1079" height="826" alt="vLLM-Deployment" src="https://github.com/user-attachments/assets/684f43e7-3acc-4dea-9083-1138313e08ec" />
+
 
