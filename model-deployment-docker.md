@@ -100,13 +100,13 @@ docker-compose up -d
 # Custom model
 docker-compose.yaml
 
-> Note: Load the customized model. model is stored at - /Data-1/docker/volumes/vllm_data/models/nucurate-model
+> Note: Load the customized model. model is stored at - /Data-1/docker/volumes/vllm_data/models/xxxx-model
 
 ```
 services:
   vllm-qwen3:
     image: vllm/vllm-openai:latest
-    container_name: vllm-nucurate-model
+    container_name: vllm-xxxx-model
     runtime: nvidia
     entrypoint: [""]
     environment:
@@ -121,11 +121,11 @@ services:
     ports:
       - "11438:8000"
     volumes:
-      - /Data-1/docker/volumes/vllm_data/models/nucurate-model:/models
+      - /Data-1/docker/volumes/vllm_data/models/xxxx-model:/models
     command: >
       bash -c "pip install mistral_common -q &&
       vllm serve /models
-      --served-model-name nucurate-model
+      --served-model-name xxxxx-model
       --tensor-parallel-size 1
       --gpu-memory-utilization 0.9
       --max-model-len 8192
