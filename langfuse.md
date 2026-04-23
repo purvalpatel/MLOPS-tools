@@ -587,4 +587,5 @@ spec:
 
 - Traces stored on S3: `s3://xxxx/cmo9yoahr0004za076c8u8wz0`
 
-![alt text](vllm-deployment-22Apr.png)
+<img width="1451" height="816" alt="vllm-deployment-22Apr" src="https://github.com/user-attachments/assets/eb880cea-bdb9-4b69-a922-0af23863087b" />
+
