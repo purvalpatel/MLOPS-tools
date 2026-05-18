@@ -35,12 +35,12 @@ evaluation data
 ```
 
 #### Common Tools
-| Purpose        | Tools                                                                                                                                                            |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Object storage | [MinIO](https://min.io?utm_source=chatgpt.com), [Amazon S3](https://aws.amazon.com/s3/?utm_source=chatgpt.com)                                                   |
-| Data lake      | [Delta Lake](https://delta.io?utm_source=chatgpt.com)                                                                                                            |
-| Databases      | [PostgreSQL](https://www.postgresql.org?utm_source=chatgpt.com), [MongoDB](https://www.mongodb.com?utm_source=chatgpt.com)                                       |
-| Vector DB      | [Milvus](https://milvus.io?utm_source=chatgpt.com), [Qdrant](https://qdrant.tech?utm_source=chatgpt.com), [Weaviate](https://weaviate.io?utm_source=chatgpt.com) |
+| Purpose        | Tools                                                                                                                                                            | status |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| Object storage | MinIO, Amazon S3                                               | Done |
+| Data lake      | Delta Lake                                                      | -- |
+| Databases      | PostgreSQL, MongoDB                                       | -- |
+| Vector DB      | Milvus, Qdrant, Weaviate                                         | -- |
 
 ### 2. Data Versioning
 
@@ -56,9 +56,9 @@ RLHF dataset v3
 #### Tools:
 | Tool                                                                                 | Purpose                      |
 | ------------------------------------------------------------------------------------ | ---------------------------- |
-| [DVC](https://dvc.org?utm_source=chatgpt.com)                                        | Data version control         |
-| [LakeFS](https://lakefs.io?utm_source=chatgpt.com)                                   | Git-like versioning for data |
-| [Weights & Biases Artifacts](https://wandb.ai/site/artifacts?utm_source=chatgpt.com) | Dataset lineage              |
+| DVC                                      | Data version control         |
+| LakeFS                                   | Git-like versioning for data |
+| Weights & Biases Artifacts | Dataset lineage              |
 
 
 ### 3. Experiment Tracking
@@ -74,9 +74,9 @@ training runs
 
 | Tool                                                        | Purpose                |
 | ----------------------------------------------------------- | ---------------------- |
-| [MLflow](https://mlflow.org?utm_source=chatgpt.com)         | Experiment tracking    |
-| [Weights & Biases](https://wandb.ai?utm_source=chatgpt.com) | Training visualization |
-| [Neptune AI](https://neptune.ai?utm_source=chatgpt.com)     | Experiment metadata    |
+| MLflow         | Experiment tracking    |
+| Weights & Biases | Training visualization |
+| Neptune AI     | Experiment metadata    |
 
 ### 4. Model Training
 
@@ -85,9 +85,9 @@ Train/fine-tune models.
 #### Tools
 | Area                      | Tools                                                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Distributed training      | [PyTorch](https://pytorch.org?utm_source=chatgpt.com)                                                         |
-| LLM fine-tuning           | [Hugging Face Transformers](https://huggingface.co/docs/transformers?utm_source=chatgpt.com)                  |
-| Distributed orchestration | [Ray](https://www.ray.io?utm_source=chatgpt.com), [Kubeflow](https://www.kubeflow.org?utm_source=chatgpt.com) |
+| Distributed training      | PyTorch                                                       |
+| LLM fine-tuning           | Hugging Face Transformers                 |
+| Distributed orchestration | Ray, Kubeflow |
 | GPU scheduling            | Kubernetes                                                                                                    |
 
 
@@ -107,9 +107,9 @@ llama3-chat
 
 | Tool                                                                                         | Purpose       |
 | -------------------------------------------------------------------------------------------- | ------------- |
-| [MLflow Registry](https://mlflow.org/docs/latest/model-registry.html?utm_source=chatgpt.com) | Versioning    |
-| [Weights & Biases Registry](https://wandb.ai/site/models?utm_source=chatgpt.com)             | Registry      |
-| [Hugging Face Hub](https://huggingface.co?utm_source=chatgpt.com)                            | Model hosting |
+| MLflow Registry | Versioning    |
+| Weights & Biases Registry             | Registry      |
+| Hugging Face Hub                        | Model hosting |
 
 ### 6. CI/CD For ML
 Automate:
@@ -122,10 +122,10 @@ rollbacks
 #### Tools:
 | Tool                                                                                                            | Purpose              |
 | --------------------------------------------------------------------------------------------------------------- | -------------------- |
-| [GitHub Actions](https://github.com/features/actions?utm_source=chatgpt.com)                                    | CI/CD                |
-| [GitLab CI/CD](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/?utm_source=chatgpt.com) | Pipelines            |
-| [Argo CD](https://argo-cd.readthedocs.io?utm_source=chatgpt.com)                                                | GitOps               |
-| [Tekton](https://tekton.dev?utm_source=chatgpt.com)                                                             | Kubernetes-native CI |
+| GitHub Actions                                   | CI/CD                |
+| GitLab CI/CD | Pipelines            |
+| Argo CD                                                | GitOps               |
+| Tekton                                                         | Kubernetes-native CI |
 
 
 ### 7. Deployment
@@ -135,10 +135,10 @@ Serve models in production.
 #### Tools:
 | Type                | Tools                                                               |
 | ------------------- | ------------------------------------------------------------------- |
-| LLM inference       | [vLLM](https://github.com/vllm-project/vllm?utm_source=chatgpt.com) |
-| Multi-model serving | [KServe](https://kserve.github.io/website?utm_source=chatgpt.com)   |
-| General serving     | [Seldon Core](https://www.seldon.io?utm_source=chatgpt.com)         |
-| API layer           | [FastAPI](https://fastapi.tiangolo.com?utm_source=chatgpt.com)      |
+| LLM inference       | vLLM |
+| Multi-model serving | KServe |
+| General serving     | Seldon Core       |
+| API layer           | FastAPI      |
 
 
 ### 8. Traffic Management
@@ -155,8 +155,8 @@ blue/green deployments
 | Tool                                                                                           | Purpose           |
 | ---------------------------------------------------------------------------------------------- | ----------------- |
 | Istio                                                                                          | Traffic splitting |
-| [Linkerd](https://linkerd.io?utm_source=chatgpt.com)                                           | Service mesh      |
-| [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/?utm_source=chatgpt.com) | Ingress routing   |
+| Linkerd                                        | Service mesh      |
+| NGINX Ingress Controller | Ingress routing   |
 
 ### 9. Observability & Tracing
 Track:
@@ -172,10 +172,10 @@ failures
 
 | Tool                                                             | Purpose             |
 | ---------------------------------------------------------------- | ------------------- |
-| [Langfuse](https://langfuse.com?utm_source=chatgpt.com)          | LLM observability   |
-| [OpenTelemetry](https://opentelemetry.io?utm_source=chatgpt.com) | Distributed tracing |
-| [Jaeger](https://www.jaegertracing.io?utm_source=chatgpt.com)    | Trace visualization |
-| [Helicone](https://www.helicone.ai?utm_source=chatgpt.com)       | LLM analytics       |
+| Langfuse          | LLM observability   |
+| OpenTelemetry | Distributed tracing |
+| Jaeger   | Trace visualization |
+| Helicone     | LLM analytics       |
 
 
 ### 10. Infrastructure Monitoring
@@ -190,10 +190,10 @@ queue depth
 #### Tools
 | Tool                                                                                   | Purpose           |
 | -------------------------------------------------------------------------------------- | ----------------- |
-| [Prometheus](https://prometheus.io?utm_source=chatgpt.com)                             | Metrics           |
-| [Grafana](https://grafana.com?utm_source=chatgpt.com)                                  | Dashboards        |
-| [NVIDIA DCGM Exporter](https://github.com/NVIDIA/dcgm-exporter?utm_source=chatgpt.com) | GPU metrics       |
-| [cAdvisor](https://github.com/google/cadvisor?utm_source=chatgpt.com)                  | Container metrics |
+| Prometheus                            | Metrics           |
+| Grafana                               | Dashboards        |
+| NVIDIA DCGM Exporter | GPU metrics       |
+| cAdvisor               | Container metrics |
 
 
 
@@ -210,9 +210,9 @@ audit logs
 #### Tools:
 | Tool                                                                                                  | Purpose            |
 | ----------------------------------------------------------------------------------------------------- | ------------------ |
-| [Vault](https://www.vaultproject.io?utm_source=chatgpt.com)                                           | Secrets            |
-| [Keycloak](https://www.keycloak.org?utm_source=chatgpt.com)                                           | Authentication     |
-| [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/docs/?utm_source=chatgpt.com) | Policy enforcement |
+| Vault                                         | Secrets            |
+| Keycloak                                        | Authentication     |
+| OPA Gatekeeper | Policy enforcement |
 
 
 12. Retraining & Automation
@@ -227,9 +227,9 @@ promote new versions
 #### Tools:
 | Tool                                                                                             | Purpose      |
 | ------------------------------------------------------------------------------------------------ | ------------ |
-| [Kubeflow Pipelines](https://www.kubeflow.org/docs/components/pipelines/?utm_source=chatgpt.com) | ML workflows |
-| [Apache Airflow](https://airflow.apache.org?utm_source=chatgpt.com)                              | Scheduling   |
-| [Metaflow](https://metaflow.org?utm_source=chatgpt.com)                                          | ML pipelines |
+| Kubeflow Pipelines | ML workflows |
+| Apache Airflow                             | Scheduling   |
+| Metaflow                                  | ML pipelines |
 
 
 ## LLMOps Stack (Modern AI Inference Platforms)
