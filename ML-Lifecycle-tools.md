@@ -212,7 +212,7 @@ audit logs
 | ----------------------------------------------------------------------------------------------------- | ------------------ | -- |
 | Vault                                         | Secrets            | ✅ |
 | Keycloak                                        | Authentication     | ✅ |
-| OPA Gatekeeper | Policy enforcement | ✅ |
+| OPA Gatekeeper <br> ResourceQuota <br> LimitRange | Policy enforcement | ✅ |
 
 
 12. Retraining & Automation
