@@ -37,10 +37,10 @@ evaluation data
 #### Common Tools
 | Purpose        | Tools                                                                                                                                                            | status |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| Object storage | MinIO, Amazon S3                                               | Done |
+| Object storage | MinIO, Amazon S3                                               | ✅ |
 | Data lake      | Delta Lake                                                      | -- |
-| Databases      | PostgreSQL, MongoDB                                       | -- |
-| Vector DB      | Milvus, Qdrant, Weaviate                                         | -- |
+| Databases      | PostgreSQL, MongoDB                                       | ✅ |
+| Vector DB      | Milvus, Qdrant, Weaviate                                         | ✅ |
 
 ### 2. Data Versioning
 
@@ -54,11 +54,11 @@ RLHF dataset v3
 ```
 
 #### Tools:
-| Tool                                                                                 | Purpose                      |
-| ------------------------------------------------------------------------------------ | ---------------------------- |
-| DVC                                      | Data version control         |
-| LakeFS                                   | Git-like versioning for data |
-| Weights & Biases Artifacts | Dataset lineage              |
+| Tool                                                                                 | Purpose                      | status |
+| ------------------------------------------------------------------------------------ | ---------------------------- | -- |
+| DVC                                      | Data version control         | -- |
+| LakeFS                                   | Git-like versioning for data | -- |
+| Weights & Biases Artifacts | Dataset lineage              | -- |
 
 
 ### 3. Experiment Tracking
@@ -72,23 +72,23 @@ training runs
 
 #### Tools:
 
-| Tool                                                        | Purpose                |
-| ----------------------------------------------------------- | ---------------------- |
-| MLflow         | Experiment tracking    |
-| Weights & Biases | Training visualization |
-| Neptune AI     | Experiment metadata    |
+| Tool                                                        | Purpose                | status |
+| ----------------------------------------------------------- | ---------------------- | -- |
+| MLflow         | Experiment tracking    | -- |
+| Weights & Biases | Training visualization | -- |
+| Neptune AI     | Experiment metadata    | -- |
 
 ### 4. Model Training
 
 Train/fine-tune models.
 
 #### Tools
-| Area                      | Tools                                                                                                         |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Distributed training      | PyTorch                                                       |
-| LLM fine-tuning           | Hugging Face Transformers                 |
-| Distributed orchestration | Ray, Kubeflow |
-| GPU scheduling            | Kubernetes                                                                                                    |
+| Area                      | Tools                      | status |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- | -- |
+| Distributed training      | PyTorch                                                       | ✅ |
+| LLM fine-tuning           | Hugging Face Transformers                 | ✅ |
+| Distributed orchestration | Ray, Kubeflow |   ✅ |
+| GPU scheduling            | Kubernetes                                                                                                    | ✅ |
 
 
 ### 5. Model Registry
@@ -105,11 +105,11 @@ llama3-chat
 
 #### Tools:
 
-| Tool                                                                                         | Purpose       |
-| -------------------------------------------------------------------------------------------- | ------------- |
-| MLflow Registry | Versioning    |
-| Weights & Biases Registry             | Registry      |
-| Hugging Face Hub                        | Model hosting |
+| Tool                                                                                         | Purpose       | status |
+| -------------------------------------------------------------------------------------------- | ------------- | -- |
+| MLflow Registry | Versioning    | -- |
+| Weights & Biases Registry             | Registry      | -- |
+| Hugging Face Hub                        | Model hosting | ✅ |
 
 ### 6. CI/CD For ML
 Automate:
@@ -120,12 +120,12 @@ deployments
 rollbacks
 ```
 #### Tools:
-| Tool                                                                                                            | Purpose              |
-| --------------------------------------------------------------------------------------------------------------- | -------------------- |
-| GitHub Actions                                   | CI/CD                |
-| GitLab CI/CD | Pipelines            |
-| Argo CD                                                | GitOps               |
-| Tekton                                                         | Kubernetes-native CI |
+| Tool                                                                                                            | Purpose              | status |
+| --------------------------------------------------------------------------------------------------------------- | -------------------- |  -- |
+| GitHub Actions                                   | CI/CD                |  ✅ |
+| GitLab CI/CD | Pipelines            | ✅ |
+| Argo CD                                                | GitOps               | ✅ | 
+| Tekton                                                         | Kubernetes-native CI | -- |
 
 
 ### 7. Deployment
@@ -133,12 +133,12 @@ rollbacks
 Serve models in production.
 
 #### Tools:
-| Type                | Tools                                                               |
-| ------------------- | ------------------------------------------------------------------- |
-| LLM inference       | vLLM |
-| Multi-model serving | KServe |
-| General serving     | Seldon Core       |
-| API layer           | FastAPI      |
+| Type                | Tools                                                               | status |
+| ------------------- | ------------------------------------------------------------------- | -- |
+| LLM inference       | vLLM | ✅ |
+| Multi-model serving | KServe | ✅ |
+| General serving     | Seldon Core       | -- |
+| API layer           | FastAPI      | ✅ |
 
 
 ### 8. Traffic Management
@@ -152,11 +152,11 @@ blue/green deployments
 
 #### Tools:
 
-| Tool                                                                                           | Purpose           |
-| ---------------------------------------------------------------------------------------------- | ----------------- |
-| Istio                                                                                          | Traffic splitting |
-| Linkerd                                        | Service mesh      |
-| NGINX Ingress Controller | Ingress routing   |
+| Tool                                                                                           | Purpose           | status |
+| ---------------------------------------------------------------------------------------------- | ----------------- | -- |
+| Istio                                                                                          | Traffic splitting | ✅ |
+| Linkerd                                        | Service mesh      | -- |
+| NGINX Ingress Controller | Ingress routing   | ✅ |
 
 ### 9. Observability & Tracing
 Track:
@@ -170,12 +170,12 @@ failures
 
 #### Tools
 
-| Tool                                                             | Purpose             |
-| ---------------------------------------------------------------- | ------------------- |
-| Langfuse          | LLM observability   |
-| OpenTelemetry | Distributed tracing |
-| Jaeger   | Trace visualization |
-| Helicone     | LLM analytics       |
+| Tool                                                             | Purpose             | status |
+| ---------------------------------------------------------------- | ------------------- | -- |
+| Langfuse          | LLM observability   | ✅ |
+| OpenTelemetry | Distributed tracing | ✅ |
+| Jaeger   | Trace visualization | ✅ |
+| Helicone     | LLM analytics       | -- |
 
 
 ### 10. Infrastructure Monitoring
@@ -188,12 +188,12 @@ token throughput
 queue depth
 ```
 #### Tools
-| Tool                                                                                   | Purpose           |
-| -------------------------------------------------------------------------------------- | ----------------- |
-| Prometheus                            | Metrics           |
-| Grafana                               | Dashboards        |
-| NVIDIA DCGM Exporter | GPU metrics       |
-| cAdvisor               | Container metrics |
+| Tool                                                                                   | Purpose           | status |
+| -------------------------------------------------------------------------------------- | ----------------- | -- |
+| Prometheus                            | Metrics           | ✅ |
+| Grafana                               | Dashboards        | ✅ |
+| NVIDIA DCGM Exporter | GPU metrics       | ✅ |
+| cAdvisor               | Container metrics | ✅ |
 
 
 
@@ -208,11 +208,11 @@ audit logs
 ```
 
 #### Tools:
-| Tool                                                                                                  | Purpose            |
-| ----------------------------------------------------------------------------------------------------- | ------------------ |
-| Vault                                         | Secrets            |
-| Keycloak                                        | Authentication     |
-| OPA Gatekeeper | Policy enforcement |
+| Tool                                                                                                  | Purpose            | Status |
+| ----------------------------------------------------------------------------------------------------- | ------------------ | -- |
+| Vault                                         | Secrets            | ✅ |
+| Keycloak                                        | Authentication     | ✅ |
+| OPA Gatekeeper | Policy enforcement | -- |
 
 
 12. Retraining & Automation
@@ -225,11 +225,11 @@ promote new versions
 ```
 
 #### Tools:
-| Tool                                                                                             | Purpose      |
-| ------------------------------------------------------------------------------------------------ | ------------ |
-| Kubeflow Pipelines | ML workflows |
-| Apache Airflow                             | Scheduling   |
-| Metaflow                                  | ML pipelines |
+| Tool                                                                                             | Purpose      | status |
+| ------------------------------------------------------------------------------------------------ | ------------ | -- |
+| Kubeflow Pipelines | ML workflows | -- |
+| Apache Airflow                             | Scheduling   | -- |
+| Metaflow                                  | ML pipelines | -- |
 
 
 ## LLMOps Stack (Modern AI Inference Platforms)
