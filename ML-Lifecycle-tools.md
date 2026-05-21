@@ -38,7 +38,7 @@ evaluation data
 | Purpose        | Tools                                                                                                                                                            | status |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
 | Object storage | MinIO, Amazon S3                                               | ✅ |
-| Data lake      | Delta Lake                                                      | -- |
+| Data lake      | Delta Lake                                                      | ✅ |
 | Databases      | PostgreSQL, MongoDB                                       | ✅ |
 | Vector DB      | Milvus, Qdrant, Weaviate                                         | ✅ |
 
