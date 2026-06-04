@@ -59,4 +59,5 @@ k8sgpt analyze
 ```
 k8sgpt analyze --explain
 ```
-![alt text](image-31.png)
+<img width="2280" height="559" alt="image" src="https://github.com/user-attachments/assets/1c23fd83-bf81-44a9-8d69-5b18f10abd5a" />
+
