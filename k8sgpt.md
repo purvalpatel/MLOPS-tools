@@ -1,3 +1,7 @@
+k8sgpt is a tool for scanning your Kubernetes clusters, diagnosing, and triaging issues in simple English.
+
+It has SRE experience codified into its analyzers and helps to pull out the most relevant information to enrich it with AI.
+
 ### Setup k8sgpt package:
 
 #### Download K8sgpt for ubuntu:
