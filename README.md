@@ -1,6 +1,18 @@
-we will train a simple model from scratch (base) — not a huge LLM like Llama or GPT, but something you can actually run and understand on your computer.
+## What MLOps engineer Roles and responsibility
+- Build reproducible training pipelines
+- Automate data ingestion and feature engineering
+- Manage experiment tracking
+- Set up model registry
+- Deploy models with CI/CD
+- Monitor models in production (drift, accuracy, latency)
+- Manage infra – Kubernetes, GPUs, cloud, scaling
+- Enable teams (Data Scientists + ML Engineers) to ship models faster and safely
 
-We’ll make a tiny text model that learns to predict the next word in a sentence — the simplest version of how LLMs work.
+> Think of them as: DevOps + Cloud + ML workflow automation They ensure ML systems keep running reliably, just like DevOps ensures apps run reliably.
+
+`Data Scientist`: Creates the model. <br>
+`ML Engineer`: Turns the model into production code. <br>
+`MLOps Engineer`: Builds the system that trains, deploys, scales, and monitors the model. <br>
 
 ### Goal:
 
