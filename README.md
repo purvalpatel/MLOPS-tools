@@ -14,6 +14,16 @@
 `ML Engineer`: Turns the model into production code. <br>
 `MLOps Engineer`: Builds the system that trains, deploys, scales, and monitors the model. <br>
 
+## Deployment and Serving
+
+- Suppose you have one Model. for examlple, Qwen3.5-122b.
+- You started it with vLLM : `vllm serve Qwen3.5-122b`
+- This is called `Deployment`
+- Now user sends curl request to model.
+- vllm received request and send response.
+- This is called `Serving`
+
+
 ### Goal:
 
 Train a small model to learn language patterns from a few example sentences, like:
