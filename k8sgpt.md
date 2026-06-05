@@ -14,11 +14,11 @@ curl -LO https://github.com/k8sgpt-ai/k8sgpt/releases/download/v0.4.33/k8sgpt_am
 dpkg -i k8sgpt_amd64.deb
 ```
 
-> Kubernetes sends the cluster diagnostics to OpenAI APIs. but it is paid so we can use local inference server ollama.
+> Kubernetes can sends the cluster diagnostics to OpenAI API's, but it is paid so we can use Local LLM.
 
 > Install `k8sgpt` on cluster or on local machine but make sure that cluster should be accessible via `kubectl` command.
 
-### Setup ollama if not exists.
+### Setup Local LLM if not exists.
 
 #### Pull model in ollama if not available:
 ```
@@ -43,7 +43,7 @@ curl http://localhost:11434/api/generate -d '{
 ```
 k8sgpt auth add \
   --backend localai \
-  --baseurl http://10.10.110.25:11434/v1 \
+  --baseurl http://localhost:11434/v1 \
   --model qwen3:8b
 ```
 #### Set default provider:
@@ -67,3 +67,4 @@ k8sgpt analyze --explain
 ```
 <img width="2280" height="559" alt="image" src="https://github.com/user-attachments/assets/1c23fd83-bf81-44a9-8d69-5b18f10abd5a" />
 
+Reference : https://github.com/k8sgpt-ai/k8sgpt
