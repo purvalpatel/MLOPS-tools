@@ -16,6 +16,8 @@ dpkg -i k8sgpt_amd64.deb
 
 > Kubernetes sends the cluster diagnostics to OpenAI APIs. but it is paid so we can use local inference server ollama.
 
+> Install `k8sgpt` on cluster or on local machine but make sure that cluster should be accessible via `kubectl` command.
+
 ### Setup ollama if not exists.
 
 #### Pull model in ollama if not available:
