@@ -67,4 +67,6 @@ k8sgpt analyze --explain
 ```
 <img width="2280" height="559" alt="image" src="https://github.com/user-attachments/assets/1c23fd83-bf81-44a9-8d69-5b18f10abd5a" />
 
-Reference : https://github.com/k8sgpt-ai/k8sgpt
+Reference : https://github.com/k8sgpt-ai/k8sgpt  <br>
+
+KubeGPT Dashboard : https://github.com/prerana-puttaswamy/kubegpt-dashboard
