@@ -132,6 +132,32 @@ Flow:
 ```
 
 # ClickHouse
+ClickHouse is a database.
+
+It stores the data itself.
+```
+ClickHouse
+    |
+    +--> Local storage
+    +--> Object storage (optional)
+```
+Its job is to ingest, store, index, compress, and query data efficiently. <br>
+
+Primarily queries data stored in ClickHouse.
+
+It has integrations, but federated querying is not its main purpose.
+
+Trino + Iceberg
+- Cheap storage
+- S3 + Parquet
+
+Store hundreds of terabytes economically.
+- ClickHouse
+- Storage + Compute
+
+You are maintaining a database cluster.
+
+More expensive at very large scales.
 
 Suppose You have 10TB of data of orders.
 ```
