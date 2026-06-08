@@ -57,8 +57,8 @@ fs.native-s3.enabled=true
 s3.endpoint=https://mns3006.xx.xx
 s3.region=us-east-1
 s3.path-style-access=true
-s3.aws-access-key=0B3xAN861NUCxZ5G1T61WxT
-s3.aws-secret-key=_pUoc4IqCbYX2LC8xx7w7KU8Kfjg11gK83id50A408
+s3.aws-access-key=0B3xAN861NFUCxZF5G1ET61WxT
+s3.aws-secret-key=_pUoc4IqCbYX2LC8xx7w7Egtu567KU8Kfjg11gK83id50A408
 ```
 
 ### Connect Trino CLI:
@@ -95,7 +95,7 @@ VALUES
 
 Iceberg will automatically create in s3:
 ```
-numol/
+xxxxx/
  └── demo
       └── employees
            ├── metadata/
@@ -105,8 +105,8 @@ numol/
 
 Parquet file is created on S3 storage:
 ```LOG
-s3cmd ls s3://xx/demo/employees-ece672c1c8a648c6b8b6583421ccb0cf/data/
-2026-06-05 11:43          654  s3://xx/demo/employees-ece672c1c8a648c6b8b6583421ccb0cf/data/20260605_114302_00003_6fwyt-e91a45d6-24e0-4366-8738-2cfce720c614.parquet
+s3cmd ls s3://xx/demo/employees-ece672c1c8a6d48c6b8b658342d1ccb0cf/data/
+2026-06-05 11:43          654  s3://xx/demo/employees-ece672c1c8ca648c6b8b6583421ccb0cf/data/20260605_114302_00003_6fwyt-e91a45d6-24e0-4366-8738-2cfce720c614.parquet
 ```
 
 Then,
