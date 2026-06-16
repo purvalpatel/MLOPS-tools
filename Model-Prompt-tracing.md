@@ -43,7 +43,7 @@ vLLM service (ClusterIP)
     |
 vLLM Pod
 ```
-Docker Registry : docker.merai.app/devops/llama-llm-proxy:0.7
+Docker Registry : docker.linux.app/devops/llama-llm-proxy:0.7
 
 ### API-Proxy image create:
 app.py
@@ -349,8 +349,8 @@ openinference-semantic-conventions
 ```
 Build and push the image to your registry:
 ```
-sudo docker build -t docker.merai.app/devops/llama-llm-proxy:0.5 .
-sudo docker push docker.merai.app/devops/llama-llm-proxy:0.5
+sudo docker build -t docker.linux.app/devops/llama-llm-proxy:0.5 .
+sudo docker push docker.linux.app/devops/llama-llm-proxy:0.5
 ```
 #### Deployment - Fast-api-wrapper.yaml 
 ```YAML
@@ -371,7 +371,7 @@ spec:
     spec:
       containers:
       - name: llama-llm-proxy
-        image: docker.merai.app/devops/llama-llm-proxy:0.7
+        image: docker.linux.app/devops/llama-llm-proxy:0.7
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

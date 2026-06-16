@@ -51,7 +51,7 @@ helm repo update
 langfuse:
   nextauth:
     secret:
-      value: "nuvoai@123"
+      value: "linuxai@123"
   salt:
     value: "d8fK3j9slPz8Jk29sdf8sdf9sdf9sdFsd9f=="
   env:
@@ -62,7 +62,7 @@ s3:
   storageProvider: "s3"
   bucket: "numol"
   region: "us-east-1"
-  endpoint: "http://mns3006.merai.cloud"
+  endpoint: "http://mns3006.linux.cloud"
   forcePathStyle: true
   accessKeyId:
     value: "0B3AN861NURCZ5Gfd1T61WTxxxxxx"        # ← nested under value:
@@ -76,7 +76,7 @@ clickhouse:
   enabled: true
   auth:
     username: langfuse
-    password: "nuvoai@123"
+    password: "linuxai@123"
     database: langfuse
 
 redis:
@@ -493,8 +493,8 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ### Build image:
 ```
-sudo docker build -t docker.merai.app/devops/llama-llm-proxy:langfuse-1 .
-sudo docker push docker.merai.app/devops/llama-llm-proxy:langfuse-1
+sudo docker build -t docker.linux.app/devops/llama-llm-proxy:langfuse-1 .
+sudo docker push docker.linux.app/devops/llama-llm-proxy:langfuse-1
 ```
 
 - This image contains the integration of langfuse.
@@ -519,8 +519,8 @@ spec:
     spec:
       containers:
       - name: llama-llm-proxy
-        image: docker.merai.app/devops/llama-llm-proxy:langfuse-1
-#        image: docker.merai.app/devops/llama-llm-proxy:log-0.2
+        image: docker.linux.app/devops/llama-llm-proxy:langfuse-1
+#        image: docker.linux.app/devops/llama-llm-proxy:log-0.2
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
@@ -1045,8 +1045,8 @@ langfuse==2.20.0
 
 ### Create image:
 ```
-sudo docker build -t docker.merai.app/devops/llama-llm-proxy:lf-prmt-mgnt-1 .
-sudo docker push docker.merai.app/devops/llama-llm-proxy:lf-prmt-mgnt-1
+sudo docker build -t docker.linux.app/devops/llama-llm-proxy:lf-prmt-mgnt-1 .
+sudo docker push docker.linux.app/devops/llama-llm-proxy:lf-prmt-mgnt-1
 ```
 
 ### Create Prompt in Langfuse UI

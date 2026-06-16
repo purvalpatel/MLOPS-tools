@@ -223,7 +223,7 @@ sudo docker push docker.xxx.xxxx/devops/evidently:0.1
 #### evidently_runner.py for multiple datasets(models):
 - This will generate reports for each dataset and save them as separate HTML files.
 - path - `/data/kubernetes-nfs-storage/hf-cache/reports/`
-- Docker image : `docker.merai.app/devops/evidently:0.2`
+- Docker image : `docker.linux.app/devops/evidently:0.2`
 
 evidently_runner.py
 - This is for multiple models dataset.
@@ -470,7 +470,7 @@ spec:
         spec:
           containers:
           - name: evidently
-            image: docker.merai.app/devops/evidently:0.2
+            image: docker.linux.app/devops/evidently:0.2
             imagePullPolicy: Always
             command: ["python", "/app/evidently_runner.py"]
 
