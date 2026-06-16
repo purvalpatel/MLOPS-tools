@@ -60,7 +60,7 @@ langfuse:
 s3:
   deploy: false                          # ← don't deploy internal MinIO
   storageProvider: "s3"
-  bucket: "numol"
+  bucket: "bucket"
   region: "us-east-1"
   endpoint: "http://mns3006.linux.cloud"
   forcePathStyle: true

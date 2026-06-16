@@ -57,8 +57,8 @@ fs.native-s3.enabled=true
 s3.endpoint=https://mns3006.xx.xx
 s3.region=us-east-1
 s3.path-style-access=true
-s3.aws-access-key=0B3xAN861NFUCxZF5G1ET61WxT
-s3.aws-secret-key=_pUoc4IqCbYX2LC8xx7w7Egtu567KU8Kfjg11gK83id50A408
+s3.aws-access-key=xxxxxxxxxxxxxxx
+s3.aws-secret-key=_xxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### Connect Trino CLI:
