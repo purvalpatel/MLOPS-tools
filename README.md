@@ -1,3 +1,7 @@
+# AI agent tech stack:
+<img width="2560" height="1432" alt="image" src="https://github.com/user-attachments/assets/e3d60a5c-e4d1-4e56-974e-b16303a4e4ad" />
+
+
 ## What MLOps engineer Roles and responsibility
 - Build reproducible training pipelines
 - Automate data ingestion and feature engineering
