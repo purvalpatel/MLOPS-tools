@@ -121,17 +121,17 @@ Run benchmark:
 ```
 
 
-AITER   : AI Tensor Engine for ROCm
+`AITER `  : AI Tensor Engine for ROCm
 
-TORCH_BLAS_PREFER_HIPBLASLT=1       :       Prefers the hipBLASLt backend for optimized matrix multiplication on AMD GPUs
+`TORCH_BLAS_PREFER_HIPBLASLT=1`       :       Prefers the hipBLASLt backend for optimized matrix multiplication on AMD GPUs
 
-VLLM_ROCM_USE_AITER=1               :       Forces VLLM to use AITER's AMD C++ kernels instead of standard Python attention layers
+`VLLM_ROCM_USE_AITER=1 `              :       Forces VLLM to use AITER's AMD C++ kernels instead of standard Python attention layers
 
---device /dev/kfd       :   Kernel Fusion Driver for GPU compute
+`--device /dev/kfd `      :   Kernel Fusion Driver for GPU compute
 
-MHA : Multi head Attention
+`MHA` : Multi head Attention
 
---ipc=host      :       It allows multiple worker processes to share memory for tensor exchange
+`--ipc=host`      :       It allows multiple worker processes to share memory for tensor exchange
 
 important metrics:
 | Metric                     | Meaning               |
