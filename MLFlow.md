@@ -2,15 +2,33 @@
 ```
 Github + Experiment tracer + Model registry for ML
 ```
+MLFlow is an opensource platform for managing machine learning lifecycle.
 
-### Without MLFlow:
-Noobody knows:
-- Which model performed best?
-- Which dataset was used ?
-- which hyperparameters worked ?
-- Which model is in production ?
+It helps to track experiments, Compare model performance, save models,  manage versions, and support deployment.
 
-These becomes messy. <br>
+Imagine you are building model with predict house prices. You train models with different algorithms and parameters.
+
+**Without MLFlow** you might record everything manually in notebooks or spreadsheets.
+
+**With MLFlow** you can automatically track:
+- Which algorithm you used.
+- Which parameters you selected.
+- How well model performed.
+- Which Model Files were generated.
+- Which experiment produced the same result.
+
+```
+Experiment, Algorithm, Learning rate, Accuracy
+                |
+            Logistic regression, Random forest, Gradient boosting
+```
+With MLFlow you can log these values and compare the experiments through  web-based interface.
+
+Components of MLFlow:
+- Tracking  - Parameters, Metrics, Artifacts
+- Projects
+- Models    - standard format for packaging models
+- Model Registry    - Manage model versions.
 
 It helps track:
 - Experiments
@@ -19,13 +37,6 @@ It helps track:
 - Metrics
 - Models
 - deployments
-
-## Core Components
-- Tracking
-- Model Registry
-- Artifacts
-- Deployments
-
 
 
 Implemented project - https://github.com/purvalpatel/Sample-mlops-project <br>
