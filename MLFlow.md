@@ -244,6 +244,7 @@ with mlflow.start_run(run_name="random-forest-v1") as run:
         signature=signature,
         input_example=X_train.iloc[:3],
         registered_model_name=MODEL_NAME,
+        skops_trusted_types=["sklearn.tree._tree.Tree"],
     )
 
     print("Model URI:", model_info.model_uri)
@@ -253,6 +254,7 @@ with mlflow.start_run(run_name="random-forest-v1") as run:
     print("Registered model name:", MODEL_NAME)
 
     print("Training completed.")
+
 ```
 
 
