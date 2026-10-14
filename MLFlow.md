@@ -38,7 +38,6 @@ It helps track:
 - Models
 - deployments
 
-
 Implemented project - https://github.com/purvalpatel/Sample-mlops-project <br>
 
 - Experiment tracking + Model Registry.
@@ -59,6 +58,41 @@ Try 10 models -> Compare -> Pick best -> Deploy
 - MLflow + ArgoCD	: GitOps ML
 - MLflow + vLLM :	LLM serving
 - MLflow + LoRA	: fine-tuning tracking
+
+
+### Prepare ubuntu environment
+
+```
+mkdir mlflow-tutorial
+cd mlflow-tutorial
+```
+
+Create a virtual environment:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+Upgrade pip:
+```
+python -m pip install --upgrade pip
+```
+Install MLflow and the required ML libraries:
+```
+pip install mlflow scikit-learn pandas numpy
+```
+Verify the installation:
+```
+mlflow --version
+```
+
+Start the MLTracking server:
+```
+mlflow server \
+  --host 0.0.0.0 \
+  --port 5000 \
+  --backend-store-uri sqlite:///mlflow.db \
+  --default-artifact-root ./mlartifacts
+```
 
 ## Deployment MLFLow
 
