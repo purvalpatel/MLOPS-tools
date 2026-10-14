@@ -94,6 +94,168 @@ mlflow server \
   --default-artifact-root ./mlartifacts
 ```
 
+Open in browser:
+```
+http://localhost:5000
+```
+
+#### Create one sample training program: `train.py`
+```
+import mlflow
+import mlflow.sklearn
+
+from mlflow.models import infer_signature
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+)
+from sklearn.model_selection import train_test_split
+
+
+# --------------------------------------------------
+# 1. MLflow configuration
+# --------------------------------------------------
+
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+
+EXPERIMENT_NAME = "breast-cancer-classification"
+MODEL_NAME = "breast-cancer-classifier"
+
+mlflow.set_experiment(EXPERIMENT_NAME)
+
+
+# --------------------------------------------------
+# 2. Load dataset
+# --------------------------------------------------
+
+dataset = load_breast_cancer(as_frame=True)
+
+X = dataset.data
+y = dataset.target
+
+print("Dataset shape:", X.shape)
+print("Number of features:", X.shape[1])
+
+
+# --------------------------------------------------
+# 3. Split dataset
+# --------------------------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y,
+)
+
+
+# --------------------------------------------------
+# 4. Define model parameters
+# --------------------------------------------------
+
+params = {
+    "n_estimators": 100,
+    "max_depth": 5,
+    "random_state": 42,
+    "class_weight": "balanced",
+}
+
+
+# --------------------------------------------------
+# 5. Start MLflow run and train model
+# --------------------------------------------------
+
+with mlflow.start_run(run_name="random-forest-v1") as run:
+
+    print("MLflow Run ID:", run.info.run_id)
+
+    model = RandomForestClassifier(**params)
+
+    model.fit(X_train, y_train)
+
+    # Predict on test dataset
+    predictions = model.predict(X_test)
+
+    # Calculate metrics
+    accuracy = accuracy_score(y_test, predictions)
+
+    precision = precision_score(
+        y_test,
+        predictions,
+        zero_division=0,
+    )
+
+    recall = recall_score(
+        y_test,
+        predictions,
+        zero_division=0,
+    )
+
+    f1 = f1_score(
+        y_test,
+        predictions,
+        zero_division=0,
+    )
+
+    # --------------------------------------------------
+    # 6. Log parameters
+    # --------------------------------------------------
+
+    mlflow.log_params(params)
+
+    mlflow.log_param("dataset", "breast_cancer")
+    mlflow.log_param("test_size", 0.2)
+    mlflow.log_param("algorithm", "RandomForestClassifier")
+
+    # --------------------------------------------------
+    # 7. Log metrics
+    # --------------------------------------------------
+
+    mlflow.log_metrics({
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1,
+    })
+
+    print("Accuracy:", accuracy)
+    print("Precision:", precision)
+    print("Recall:", recall)
+    print("F1 Score:", f1)
+
+    # --------------------------------------------------
+    # 8. Log and register model
+    # --------------------------------------------------
+
+    signature = infer_signature(
+        X_train,
+        model.predict(X_train),
+    )
+
+    model_info = mlflow.sklearn.log_model(
+        sk_model=model,
+        name="model",
+        signature=signature,
+        input_example=X_train.iloc[:3],
+        registered_model_name=MODEL_NAME,
+    )
+
+    print("Model URI:", model_info.model_uri)
+
+    print("Model registered successfully.")
+
+    print("Registered model name:", MODEL_NAME)
+
+    print("Training completed.")
+```
+
+
 ## Deployment MLFLow
 
 Deployment `mlflow-deployment.yaml`
