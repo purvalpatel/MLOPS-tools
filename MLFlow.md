@@ -358,6 +358,50 @@ MLflow Model Serving
 
 After confirming that the API works, you can containerize the model-serving application with Docker and then deploy it to Kubernetes.
 
+### Containerize your MLflow model with Docker.
+Since you've already registered your breast cancer classification model in MLflow and started serving it on port 5001, the next step is to package the model-serving application into a Docker container.
+
+use the architecture:
+```
+MLflow Tracking Server
+        |
+        v
+  Registered Model
+        |
+        v
+  Docker Container
+  +-----------------------+
+  | MLflow Model Serving  |
+  |                       |
+  | Port 5001             |
+  | POST /invocations     |
+  +-----------------------+
+        |
+        v
+   Model Predictions
+```
+
+Now will create self serving image of the model.
+
+#### Build docker image:
+```
+mlflow models build-docker \
+  --model-uri "models:/breast-cancer-classifier/1" \
+  --name "breast-cancer-api" \
+  --env-manager local
+```
+
+Verify the created image:
+```
+docker images
+```
+Run the container:
+```
+docker run -d \
+  --name breast-cancer-serving \
+  -p 5001:8080 \
+  breast-cancer-api
+```
 
 ## Deployment mlflow with Docker-compose
 
