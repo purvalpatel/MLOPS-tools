@@ -299,6 +299,65 @@ mlflow models serve \
 ```
 MLflow will load the registered model and start an inference server. The prediction endpoint will be available at http://127.0.0.1:5001/invocations.
 
+#### Verify the Deployment:
+```
+curl http://127.0.0.1:5001/health
+```
+You can also check the version:
+```
+curl http://127.0.0.1:5001/version
+```
+
+#### Send prediction Request:
+```PYTHON
+import requests
+from sklearn.datasets import load_breast_cancer
+
+# Load a sample with the same features used during training
+dataset = load_breast_cancer(as_frame=True)
+sample = dataset.data.iloc[[0]]
+
+# Send the sample to the deployed model
+response = requests.post(
+    "http://127.0.0.1:5001/invocations",
+    json={
+        "dataframe_split": {
+            "columns": sample.columns.tolist(),
+            "data": sample.values.tolist()
+        }
+    },
+    timeout=30
+)
+
+print("HTTP status:", response.status_code)
+print("Prediction:", response.text)
+```
+
+#### Understand what we have deployed:
+```
+MLflow Tracking Server
+  http://127.0.0.1:5000
+          |
+          v
+MLflow Model Registry
+  breast-cancer-classifier
+  Version 1
+          |
+          v
+MLflow Model Serving
+  http://127.0.0.1:5001
+          |
+          v
+  POST /invocations
+          |
+          v
+      Prediction
+```
+
+#### What should you do next?
+
+After confirming that the API works, you can containerize the model-serving application with Docker and then deploy it to Kubernetes.
+
 
 ## Deployment mlflow with Docker-compose
 
