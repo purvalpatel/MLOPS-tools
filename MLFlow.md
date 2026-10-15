@@ -403,6 +403,136 @@ docker run -d \
   -p 5001:8080 \
   breast-cancer-api
 ```
+### RBAC in MLFlow:
+
+RBAC Allowing you to control who can view experiments, log runs, modify registered models, and manage permissions.
+
+```
+pip install 'mlflow[auth]'
+```
+Enable Authentication:
+```
+export MLFLOW_FLASK_SERVER_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
+
+export MLFLOW_AUTH_ADMIN_PASSWORD='Replace-With-A-Strong-Password'
+```
+
+Then restart MLflow using the same database and artifact settings:
+```
+mlflow server \
+  --host 0.0.0.0 \
+  --port 5000 \
+  --backend-store-uri sqlite:///mlflow.db \
+  --default-artifact-root ./mlartifacts \
+  --app-name basic-auth
+```
+The authentication system seperately stored into `basic_auth.db`.
+
+After the administrator account created successfully, remove the initial password  from the environment.
+```
+unset MLFLOW_AUTH_ADMIN_PASSWORD
+```
+
+
+Create users and assign roles:
+```PYTHON
+from mlflow.server import get_app_client
+
+tracking_uri = "http://127.0.0.1:5000"
+
+auth_client = get_app_client(
+    "basic-auth",
+    tracking_uri=tracking_uri,
+)
+
+# Create users
+auth_client.create_user(
+    username="data_scientist",
+    password="DataScientist-Strong-Password",
+)
+
+auth_client.create_user(
+    username="model_approver",
+    password="ModelApprover-Strong-Password",
+)
+
+print("Users created successfully")
+```
+
+Assign roles:
+```PYTHON
+from mlflow.server import get_app_client
+
+tracking_uri = "http://127.0.0.1:5000"
+
+auth_client = get_app_client(
+    "basic-auth",
+    tracking_uri=tracking_uri,
+)
+
+# Create a role for users who can edit the experiment.
+scientist_role = auth_client.create_role(
+    name="data-scientist",
+    workspace="default",
+    description="Can edit the designated ML experiment",
+)
+
+auth_client.add_role_permission(
+    role_id=scientist_role.id,
+    resource_type="experiment",
+    resource_pattern="YOUR_EXPERIMENT_ID",
+    permission="EDIT",
+)
+
+auth_client.assign_role(
+    username="data_scientist",
+    role_id=scientist_role.id,
+)
+
+# Create a role for managing the registered model.
+approver_role = auth_client.create_role(
+    name="model-approver",
+    workspace="default",
+    description="Can manage the designated registered model",
+)
+
+auth_client.add_role_permission(
+    role_id=approver_role.id,
+    resource_type="registered_model",
+    resource_pattern="breast-cancer-classifier",
+    permission="MANAGE",
+)
+
+auth_client.assign_role(
+    username="model_approver",
+    role_id=approver_role.id,
+)
+
+print("Roles and permissions configured")
+```
+
+#### Test RBAC
+Test without credentials:
+```
+curl -i http://127.0.0.1:5000/
+```
+Test with Credentials:
+```
+curl -i \
+  -u 'data_scientist:DataScientist-Strong-Password' \
+  http://127.0.0.1:5000/
+```
+
+> We can assign permissions to specific Experiment ID.
+
+You want three roles:
+
+ | Role | Permission | Responsibility |
+|---|---|---|
+| Data Scientist | `EDIT` | View experiments and update runs or model resources within the granted scope |
+| Model Approver | `MANAGE` | Manage the specific registered model, including its permissions |
+| Platform Admin | Administrator privileges | Manage users, roles, and platform-wide access |
+
 
 ## Deployment mlflow with Docker-compose
 
