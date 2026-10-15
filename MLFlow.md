@@ -300,7 +300,7 @@ mlflow models serve \
 MLflow will load the registered model and start an inference server. The prediction endpoint will be available at http://127.0.0.1:5001/invocations.
 
 
-## Deployment MLFLow
+## Deployment mlflow with Docker-compose
 
 Deployment `mlflow-deployment.yaml`
 ```YAML
