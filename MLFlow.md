@@ -2,20 +2,16 @@
 ```
 Github + Experiment tracer + Model registry for ML
 ```
-MLFlow is an opensource platform for managing machine learning lifecycle.
-
-It helps to track experiments, Compare model performance, save models,  manage versions, and support deployment.
-
-Imagine you are building model with predict house prices. You train models with different algorithms and parameters.
-
-**Without MLFlow** you might record everything manually in notebooks or spreadsheets.
-
-**With MLFlow** you can automatically track:
-- Which algorithm you used.
-- Which parameters you selected.
-- How well model performed.
-- Which Model Files were generated.
-- Which experiment produced the same result.
+- MLFlow is an opensource platform for managing machine learning lifecycle.
+- It helps to track experiments, Compare model performance, save models,  manage versions, and support deployment.
+- Imagine you are building model with predict house prices. You train models with different algorithms and parameters.
+- **Without MLFlow** you might record everything manually in notebooks or spreadsheets.
+- **With MLFlow** you can automatically track:
+    - Which algorithm you used.
+    - Which parameters you selected.
+    - How well model performed.
+    - Which Model Files were generated.
+    - Which experiment produced the same result.
 
 ```
 Experiment, Algorithm, Learning rate, Accuracy
@@ -24,7 +20,7 @@ Experiment, Algorithm, Learning rate, Accuracy
 ```
 With MLFlow you can log these values and compare the experiments through  web-based interface.
 
-Components of MLFlow:
+### Components of MLFlow:
 - Tracking  - Parameters, Metrics, Artifacts
 - Projects
 - Models    - standard format for packaging models
@@ -40,6 +36,7 @@ It helps track:
 
 Implemented project - https://github.com/purvalpatel/Sample-mlops-project <br>
 
+### In-short MLFlow used for:
 - Experiment tracking + Model Registry.
 - Log metrics
 - Log Parameters
@@ -50,6 +47,7 @@ Implemented project - https://github.com/purvalpatel/Sample-mlops-project <br>
 ```
 Try 10 models -> Compare -> Pick best -> Deploy
 ```
+
 ### Production stack:
 
 - MLflow + Kubernetes : scalable deployment
@@ -60,8 +58,9 @@ Try 10 models -> Compare -> Pick best -> Deploy
 - MLflow + LoRA	: fine-tuning tracking
 
 
-### Prepare ubuntu environment
+### Demo Setup of training to deployment using MLFlow:
 
+#### Prepare ubuntu environment
 ```
 mkdir mlflow-tutorial
 cd mlflow-tutorial
@@ -76,7 +75,7 @@ Upgrade pip:
 ```
 python -m pip install --upgrade pip
 ```
-Install MLflow and the required ML libraries:
+#### Install MLflow and the required ML libraries:
 ```
 pip install mlflow scikit-learn pandas numpy
 ```
@@ -85,7 +84,7 @@ Verify the installation:
 mlflow --version
 ```
 
-Start the MLTracking server:
+#### Start the mltracking server:
 ```
 mlflow server \
   --host 0.0.0.0 \
@@ -99,7 +98,7 @@ Open in browser:
 http://localhost:5000
 ```
 
-#### Create one sample training program: `train.py`
+#### Sample training program: `train.py`
 ```
 import mlflow
 import mlflow.sklearn
@@ -254,8 +253,51 @@ with mlflow.start_run(run_name="random-forest-v1") as run:
     print("Registered model name:", MODEL_NAME)
 
     print("Training completed.")
-
 ```
+
+Run Training job:
+```
+python3 train.py
+```
+#### Open MLFlow WebUI : 
+
+http://0.0.0.0:5000
+
+You can see the Experiment inside MLFlow Webui.
+
+<img width="2390" height="458" alt="image" src="https://github.com/user-attachments/assets/d68aceb4-e447-4121-a833-668d67fc68d8" />
+
+<img width="2393" height="914" alt="image" src="https://github.com/user-attachments/assets/b1a1c556-3fa1-490e-adfc-1f866e688830" />
+
+
+#### Serve the model.
+Now your model is registered with MLFlow, Next step is to serve the registered model as an API.so another application can send input data and received predictions.
+
+For your current breast cancer classification project, I recommend this progression:
+
+1. **Deploy locally**: Serve the registered model through an HTTP REST API.
+2. **Test the API**: Send sample data and verify that predictions are returned.
+3. **Containerize it**: Package the model-serving application with Docker.
+4. **Deploy to Kubernetes**: When you're ready, expose the model through a Kubernetes Service or Ingress.
+
+#### Identify registered model name.
+- Open web UI of MLFlow
+- Models -> find the registered model.
+    - Model Name : breast-cancer-classifier
+    - Version: 1
+
+<img width="2398" height="854" alt="image" src="https://github.com/user-attachments/assets/3b8422c3-fb4f-4df7-a5e6-4b186d50fc82" />
+
+#### Start Serving model
+```
+export MLFLOW_TRACKING_URI=http://127.0.0.1:5000
+mlflow models serve \
+  --model-uri "models:/breast-cancer-classifier/1" \
+  --host 127.0.0.1 \
+  --port 5001 \
+  --env-manager local
+```
+MLflow will load the registered model and start an inference server. The prediction endpoint will be available at http://127.0.0.1:5001/invocations.
 
 
 ## Deployment MLFLow
