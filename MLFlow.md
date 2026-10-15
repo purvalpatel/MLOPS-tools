@@ -92,6 +92,7 @@ mlflow server \
   --backend-store-uri sqlite:///mlflow.db \
   --default-artifact-root ./mlartifacts
 ```
+> Here, mlflow.db database will be created in current location. mlartifacts directory will also created in current location.
 
 Open in browser:
 ```
