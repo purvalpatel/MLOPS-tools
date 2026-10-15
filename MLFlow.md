@@ -416,6 +416,7 @@ export MLFLOW_FLASK_SERVER_SECRET_KEY="$(python -c 'import secrets; print(secret
 
 export MLFLOW_AUTH_ADMIN_PASSWORD='Replace-With-A-Strong-Password'
 ```
+> The initial password used when creating the MLflow admin account. Changing this environment variable does not necessarily change the password of an existing account.
 
 Then restart MLflow using the same database and artifact settings:
 ```
@@ -432,7 +433,6 @@ After the administrator account created successfully, remove the initial passwor
 ```
 unset MLFLOW_AUTH_ADMIN_PASSWORD
 ```
-
 
 Create users and assign roles:
 ```PYTHON
@@ -511,6 +511,42 @@ auth_client.assign_role(
 print("Roles and permissions configured")
 ```
 
+
+### Change the password using Authentication API.
+
+First Export your current credentials:
+```
+export MLFLOW_TRACKING_URI="http://localhost:5000"
+export MLFLOW_TRACKING_USERNAME="admin"
+export MLFLOW_TRACKING_PASSWORD="Replace-With-A-Strong-Password"
+```
+
+Create `Change_pass.py`
+```PYTHON
+import getpass
+from mlflow.server import get_app_client
+
+client = get_app_client(
+    "basic-auth",
+    tracking_uri="http://localhost:5000",
+)
+
+new_password = getpass.getpass("Enter new password: ")
+
+client.update_user_password(
+    username="admin",
+    password=new_password,
+    current_password=getpass.getpass("Enter current password: "),
+)
+
+print("Admin password changed successfully.")
+```
+Execute: 
+```
+python3 change_pass.py
+
+## Note : Password must be more then 12 Letters.
+```
 #### Test RBAC
 Test without credentials:
 ```
